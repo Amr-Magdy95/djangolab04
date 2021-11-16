@@ -1,11 +1,23 @@
+from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from movie.models import Movie
 from .serializers import MovieSerializer
+from rest_framework.decorators import permission_classes, authentication_classes
+from rest_framework.permissions import IsAuthenticated, IsAdminUser, BasePermission
+from rest_framework.authentication import TokenAuthentication
+
+class UserCanDeleteMovie(BasePermission):
+
+    def has_permission(self, request, view):
+        if request.user.groups.filter(name='Can-Delete').exists():
+            return True
+        return False
 
 
 @api_view(["GET", "POST"]) # tells django that this is a type of rest view
+@permission_classes([IsAdminUser])
 def hello_world(request):
     if request.method == 'POST':
         return Response(
@@ -70,6 +82,7 @@ def update_movie(request, pk):
 
 #D
 @api_view(["DELETE"])
+@permission_classes([UserCanDeleteMovie])
 def delete_movie(request, pk):
     res = {}
     try:

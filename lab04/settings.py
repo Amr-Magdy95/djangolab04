@@ -39,8 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework.authtoken',
     'psycopg2',
-    'movie'
+    'movie',
+    'account.apps.AccountConfig'
 ]
 
 MIDDLEWARE = [
@@ -134,3 +136,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/media/' 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+REST_FRAMEWORK = {
+'DEFAULT_AUTHENTICATION_CLASSES':
+['rest_framework.authentication.TokenAuthentication'],
+  'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAuthenticated']
+}
